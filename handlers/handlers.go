@@ -5,18 +5,16 @@ import (
 	"net/http"
 )
 
-func HomeHandler() http.HandlerFunc {
+func HomePage() http.HandlerFunc {
+	tmpl := getTemplate()
+
 	return func(w http.ResponseWriter, r *http.Request) {
-		t := template.New("home")
-
-		t, err := t.Parse("templates/home.html")
-		if err != nil {
-			w.WriteHeader(500)
-			return
-		}
-
-		if err := t.Execute(w, nil); err != nil {
+		if err := tmpl.ExecuteTemplate(w, "home", nil); err != nil {
 			w.WriteHeader(500)
 		}
 	}
+}
+
+func getTemplate() *template.Template {
+	return template.Must(template.ParseFiles("templates/home.html", "templates/nav.html"))
 }
